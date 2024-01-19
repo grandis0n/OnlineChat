@@ -1,0 +1,23 @@
+{% for message in messages %}
+  <div id="base_alerts" class="{{ message.tags }} alert-dismissible p-4 rounded-md border">
+    <button type="button" class="close text-gray-600 hover:text-black" data-dismiss="alert">
+      &times;
+    </button>
+    {{ message }}
+  </div>
+{% endfor %}
+
+{% block scripts %}
+  <script>
+    setTimeout(() => {
+      const baseAlerts = document.getElementById("base_alerts");
+      if (baseAlerts) {
+        baseAlerts.style.transition = "height 0.5s ease";
+        baseAlerts.style.height = "0px";
+        setTimeout(() => {
+          baseAlerts.style.display = "none";
+        }, 500);
+      }
+    }, 7000);
+  </script>
+{% endblock scripts %}

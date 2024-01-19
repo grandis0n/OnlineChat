@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ chat.name }} | {% endblock %}
+
+{% block content %}
+  <div class="p-10 lg:p-20 text-center">
+    <h1 class="text-3xl lg:text-6xl text-white">{{ chat.name }}</h1>
+  </div>
+
+  <div class="lg:w-2/4 mx-4 lg:mx-auto p-4 bg-white rounded-xl">
+    <div class="chat-messages space-y-3" id="chat-messages">
+      {% for message in chat_messages %}
+        <b>{{ message.username }}</b>: {{ message.message }}<br>{% endfor %}
+    </div>
+  </div>
+
+  <div class="lg:w-2/4 mt-6 mx-4 lg:mx-auto p-4 bg-white rounded-xl">
+    <form method="post" action="." class="flex">
+      <input type="text" name="content" class="flex-1 mr-3" placeholder="Your message..." id="chat-message-input">
+
+      <button
+          class="px-5 py-3 rounded-xl text-white bg-teal-600 hover:bg-teal-700"
+          id="chat-message-submit"
+      >Submit
+      </button>
+    </form>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    // Get the chat slug and username from your Django template
+    const chatName = '{{ chat.slug }}';
+    const username = '{{ request.user.username }}';
+
+    // Create the WebSocket URL based on the current host and chatName
+    const chatSocketURL = `ws://${window.location.host}/ws/${chatName}/`;
+    const chatSocket = new WebSocket(chatSocketURL);
+
+    // Log the WebSocket URL for debugging
+    console.log('WebSocket URL:', chatSocket.url);
+
+    // Handle WebSocket events
+    chatSocket.onclose = (event) => {
+      console.log('WebSocket connection closed:', event);
+    };
+
+    chatSocket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      console.log('received:', data)
+      if (data.message) {
+        // Display the received message in the chat box
+        const chatMessages = document.querySelector('#chat-messages');
+        chatMessages.innerHTML += `<b>${data.username}</b>: ${data.message}<br>`;
+      } else {
+        {#alert('The message was empty!');#}
+      }
+
+      // Scroll to the bottom of the chat box
+      scrollToBottom();
+    };
+
+    chatSocket.onerror = (event) => {
+      console.error('WebSocket error:', event);
+    };
+
+    // Set up event listeners for chat input
+    const messageInput = document.querySelector('#chat-message-input');
+    const messageSubmitButton = document.querySelector('#chat-message-submit');
+
+    messageInput.focus();
+
+    messageInput.addEventListener('keyup', (e) => {
+      if (e.key === 'Enter') {
+        messageSubmitButton.click();
+      }
+    });
+
+    messageSubmitButton.addEventListener('click', (e) => {
+      e.preventDefault();
+
+      // Get the message from the input field
+      const message = messageInput.value;
+
+      // Send the message to the server via WebSocket
+      chatSocket.send(JSON.stringify({
+        message,
+        username,
+        chat: chatName,
+      }));
+
+      // Clear the input field
+      messageInput.value = '';
+    });
+
+    // Function to scroll to the bottom of the chat box
+    const scrollToBottom = () => {
+      const chatMessages = document.getElementById('chat-messages');
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    };
+
+    // Scroll to the bottom on page load
+    window.addEventListener('load', scrollToBottom);
+
+  </script>
+{% endblock %}

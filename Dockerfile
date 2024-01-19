@@ -1,0 +1,15 @@
+FROM python:3.10-slim
+
+# set environment variables
+ENV PROJECT_DIR=/usr/src/app
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONPATH=$PYTHONPATH:$PROJECT_DIR
+
+WORKDIR ${PROJECT_DIR}
+
+COPY requirements.txt ${PROJECT_DIR}
+
+RUN pip install -r requirements.txt
+
+EXPOSE 8000

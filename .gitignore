@@ -1,0 +1,34 @@
+
+### IDE's
+.idea/
+.vscode/
+.vim*
+ctags
+tags
+
+### Python template
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+### Environments
+*.env
+
+### File for deploy with Nginx
+uwsgi_params
+
+### Folder for collectstatic
+staticfiles/
+
+### Virtual env
+./venv
+venv/
+
+### File media
+media/
+temp/
+
+.coverage*
+.mypy*
+
