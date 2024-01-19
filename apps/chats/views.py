@@ -12,12 +12,10 @@ from services.redis import RedisService
 class ChatListTemplate(LoginRequiredMixin, FormView):
     template_name = 'chats.html'
     form_class = ChatCreateForm
-    extra_context = {'chats': chat_services.get_all_chats()}
     success_url = '/'
 
     def form_valid(self, form):
         instance: Chat = form.save()
-        # redirect to new chat page
         self.success_url += instance.slug
         messages.success(self.request, 'Chat created')
         return super(ChatListTemplate, self).form_valid(form)
@@ -26,6 +24,10 @@ class ChatListTemplate(LoginRequiredMixin, FormView):
         messages.error(self.request, 'Chat name already exists')
         return super(ChatListTemplate, self).form_invalid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['chats'] = chat_services.get_all_chats()
+        return context
 
 class ChatTemplate(LoginRequiredMixin, TemplateView):
     template_name = 'chat.html'

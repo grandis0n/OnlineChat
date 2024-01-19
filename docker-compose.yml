@@ -8,8 +8,8 @@ services:
       - db-data:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=djangochat
-      - POSTGRES_USER=erick
-      - POSTGRES_PASSWORD=erick123
+      - POSTGRES_USER=superpassword
+      - POSTGRES_PASSWORD=superpassword
     networks:
       - django-chat
 
@@ -37,8 +37,8 @@ services:
     environment:
       - POSTGRES_HOST=db
       - POSTGRES_DB=djangochat
-      - POSTGRES_USER=erick
-      - POSTGRES_PASSWORD=erick123
+      - POSTGRES_USER=superpassword
+      - POSTGRES_PASSWORD=superpassword
       - POSTGRES_PORT=5432
       - DJANGO_SETTINGS_MODULE=config.settings.base
       - REDIS_HOST=redis

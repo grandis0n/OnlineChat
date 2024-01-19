@@ -23,11 +23,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+# TODO: Set it on the environment variable
 SECRET_KEY = 'django-insecure-bga6!qquh*qa0%&^q$k60ine-9voso)w%w3p)d3ci^p!!g1myv'
 
 # SECURITY WARNING: don't run with debug turned on in production!
+# TODO: Set it on the environment variable
 DEBUG = True
 
+# TODO: Set it on the environment variable
 ALLOWED_HOSTS = ['*']
 
 LOGOUT_REDIRECT_URL = '/login'
@@ -68,6 +71,7 @@ DJANGO_APP = [
 THIRD_APPS = [
     "daphne",
     "channels",
+    "whitenoise",
 ]
 
 LOCAL_APPS = [
